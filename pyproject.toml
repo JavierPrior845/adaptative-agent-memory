@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "adaptive-agent-memory-engine"
+version = "0.1.0"
+description = "AAME: Deterministic context management, token audit, and handoff engine for AI agent harnesses"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "AAME Engineering Team" }
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "tiktoken>=0.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "rich>=13.0.0",
+]
+tui = [
+    "textual>=0.70.0",
+    "typer>=0.12.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aame"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v --strict-markers"
