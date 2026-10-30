@@ -84,24 +84,31 @@ pytest
 ```
 *23 tests unitarios cubren modelos, tokenizador, analizador de ruido, caché y adaptador de Antigravity.*
 
-### Ejecutar Auditor en Vivo (Sesión Real o Archivo Específico)
+### Ejecutar CLI Headless (`aame`)
 
-AAME auto-detecta las sesiones reales de Antigravity en el sistema:
-
-```bash
-python src/aame/demo.py
-```
-
-O especificando una ruta concreta a cualquier archivo `transcript.jsonl`:
+El paquete incluye el ejecutable de terminal `aame`:
 
 ```bash
-python src/aame/demo.py /ruta/a/brain/<session_id>/.system_generated/logs/transcript.jsonl
+# 1. Listar sesiones descubiertas en el sistema
+aame sessions --limit 5
+
+# 2. Auditar el consumo y ruido de la sesión activa
+aame inspect
+
+# 3. Auditar una sesión específica por ID o ruta
+aame inspect <session_id>
+
+# 4. Generar un Context Handoff (Save Game) a HANDOFF.md para abrir un chat limpio
+aame squash
+
+# 5. Imprimir el checkpoint directamente por pantalla
+aame squash --print
 ```
 
 ---
 
-## 4. Próximos Pasos (Roadmap Fase 2)
+## 4. Próximos Pasos (Roadmap Fase 3)
 
-- [ ] Implementar generador de checkpoints `HANDOFF.md` (*Save Game*).
-- [ ] Desarrollar CLI headless con `Typer` (`aame inspect`, `aame squash`).
-- [ ] Exportador de contexto limpio al portapapeles o archivo `@seed_context`.
+- [ ] Cockpit TUI interactivo en terminal con **Textual** (`aame cockpit`).
+- [ ] Gráficos interactivos de barras con el peso por turno y selector de podado manual.
+- [ ] Atajos de teclado para squash interactivo.
