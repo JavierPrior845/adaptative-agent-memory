@@ -17,6 +17,8 @@ from aame.core.models import (
 from aame.core.tokenizer import TokenCounter
 from aame.core.analyzer import ContextAnalyzer
 from aame.core.cache import KVCacheAnalyzer
+from aame.core.cache_store import SessionCache
+from aame.core.handoff import HandoffGenerator, HandoffState
 from aame.adapters.antigravity import AntigravityAdapter
 
 __all__ = [
@@ -29,5 +31,8 @@ __all__ = [
     "TokenCounter",
     "ContextAnalyzer",
     "KVCacheAnalyzer",
+    "SessionCache",
+    "HandoffGenerator",
+    "HandoffState",
     "AntigravityAdapter",
 ]
