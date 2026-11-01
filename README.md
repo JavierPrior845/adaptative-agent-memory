@@ -128,8 +128,28 @@ Inspirado en herramientas modernas como Claude Code y Lazygit, el Cockpit TUI im
 
 ---
 
-## 5. Próximos Pasos (Roadmap Fase 4)
+## 5. Gestión de Memoria Persistente (`.agents/memory/project.json`)
 
-- [ ] Adaptador para **Claude Code** (`~/.claude/`).
-- [ ] Gestor de reglas y hechos persistentes a nivel repositorio (`.agents/memory/project.json`).
-- [ ] Pruebas en Windows y Linux.
+AAME permite gobernar explícitamente qué reglas arquitectónicas y hechos persisten entre sesiones mediante archivos versionables en Git:
+
+```bash
+# 1. Listar hechos y decisiones del proyecto
+aame memory-list
+
+# 2. Agregar una decisión técnica inviolable
+aame memory-add "Diseño modular en frío sin APIs externas" --id "arch-cost-zero" --cat "architecture"
+
+# 3. Eliminar un hecho obsoleto
+aame memory-rm arch-cost-zero
+
+# 4. Generar el bloque consolidado de memoria para el system prompt de una nueva sesión
+aame memory-prompt
+```
+
+---
+
+## 6. Soporte Multi-Arnés
+
+AAME cuenta con arquitectura extensible para desacoplar arneses propietarios:
+* **Google Antigravity**: Logs en `.system_generated/logs/transcript.jsonl`.
+* **Anthropic Claude Code**: Logs y transcripciones en `~/.claude/` y proyectos `.claude/`.

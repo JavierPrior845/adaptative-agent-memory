@@ -19,7 +19,9 @@ from aame.core.analyzer import ContextAnalyzer
 from aame.core.cache import KVCacheAnalyzer
 from aame.core.cache_store import SessionCache
 from aame.core.handoff import HandoffGenerator, HandoffState
+from aame.core.memory_manager import MemoryFact, PersistentMemoryManager, ScopeMemory
 from aame.adapters.antigravity import AntigravityAdapter
+from aame.adapters.claude_code import ClaudeCodeAdapter
 
 __all__ = [
     "MessageCategory",
@@ -34,5 +36,9 @@ __all__ = [
     "SessionCache",
     "HandoffGenerator",
     "HandoffState",
+    "MemoryFact",
+    "ScopeMemory",
+    "PersistentMemoryManager",
     "AntigravityAdapter",
+    "ClaudeCodeAdapter",
 ]

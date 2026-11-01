@@ -235,6 +235,90 @@ def cockpit_command(
     launch_cockpit(session_path=target_path)
 
 
+@app.command("memory-list")
+def memory_list_command(
+    scope: str = typer.Option("project", "--scope", "-s", help="Scope to inspect: 'project' | 'global'"),
+) -> None:
+    """List persistent facts and architectural decisions stored in Git or user config."""
+    from aame.core.memory_manager import PersistentMemoryManager
+    mgr = PersistentMemoryManager()
+
+    mem = mgr.load_project_memory() if scope == "project" else mgr.load_global_memory()
+    target_file = mgr.project_file if scope == "project" else mgr.global_file
+
+    console.print(f"[bold cyan]Memory Scope: {scope.upper()}[/bold cyan] ({target_file})")
+
+    if not mem.facts:
+        console.print("[yellow]No facts registered in this scope yet.[/yellow]")
+        return
+
+    table = Table(title=f"Persistent Facts ({scope.capitalize()} Scope)")
+    table.add_column("ID", style="dim", no_wrap=True)
+    table.add_column("Category", style="green")
+    table.add_column("Fact / Architectural Decision", style="white")
+
+    for f in mem.facts:
+        table.add_row(f.id, f.category, f.fact)
+
+    console.print(table)
+
+
+@app.command("memory-add")
+def memory_add_command(
+    fact: str = typer.Argument(..., help="The architectural fact, decision, or constraint"),
+    fact_id: str = typer.Option(..., "--id", "-i", help="Unique slug/identifier for the fact"),
+    category: str = typer.Option("architecture", "--cat", "-c", help="Category: architecture | tech_stack | convention"),
+    scope: str = typer.Option("project", "--scope", "-s", help="Scope: 'project' | 'global'"),
+) -> None:
+    """Add a permanent fact to the project or global memory (versioned in Git)."""
+    from aame.core.memory_manager import MemoryFact, PersistentMemoryManager
+    mgr = PersistentMemoryManager()
+
+    mem = mgr.load_project_memory() if scope == "project" else mgr.load_global_memory()
+    item = MemoryFact(id=fact_id, category=category, fact=fact)
+    mem.add_fact(item)
+
+    if scope == "project":
+        saved_file = mgr.save_project_memory(mem)
+    else:
+        saved_file = mgr.save_global_memory(mem)
+
+    console.print(f"[bold green]✔ Fact successfully persisted to:[/bold green] {saved_file}")
+    console.print(f"  • ID: [bold]{item.id}[/bold] | Category: [{item.category}]")
+    console.print(f"  • Content: {item.fact}")
+
+
+@app.command("memory-rm")
+def memory_rm_command(
+    fact_id: str = typer.Argument(..., help="ID of fact to remove"),
+    scope: str = typer.Option("project", "--scope", "-s", help="Scope: 'project' | 'global'"),
+) -> None:
+    """Remove a fact by ID from project or global memory."""
+    from aame.core.memory_manager import PersistentMemoryManager
+    mgr = PersistentMemoryManager()
+
+    mem = mgr.load_project_memory() if scope == "project" else mgr.load_global_memory()
+    removed = mem.remove_fact(fact_id)
+
+    if removed:
+        if scope == "project":
+            mgr.save_project_memory(mem)
+        else:
+            mgr.save_global_memory(mem)
+        console.print(f"[bold green]✔ Fact '{fact_id}' removed from {scope} memory.[/bold green]")
+    else:
+        console.print(f"[bold red]Error:[/bold red] Fact '{fact_id}' not found in {scope} memory.")
+
+
+@app.command("memory-prompt")
+def memory_prompt_command() -> None:
+    """Print the consolidated persistent memory block to stdout for system prompt injection."""
+    from aame.core.memory_manager import PersistentMemoryManager
+    mgr = PersistentMemoryManager()
+    prompt = mgr.render_consolidated_prompt()
+    console.print(prompt)
+
+
 def main() -> None:
     """Main CLI entrypoint."""
     app()
