@@ -218,6 +218,23 @@ def squash_command(
         console.print("=" * 60)
 
 
+@app.command("cockpit")
+def cockpit_command(
+    session: Optional[str] = typer.Argument(
+        None,
+        help="Session ID, path to transcript.jsonl, or omit to launch with latest session.",
+    ),
+) -> None:
+    """Launch the interactive Terminal Cockpit (Textual TUI)."""
+    from aame.tui.app import launch_cockpit
+
+    target_path = None
+    if session:
+        target_path = _resolve_session_path(session)
+
+    launch_cockpit(session_path=target_path)
+
+
 def main() -> None:
     """Main CLI entrypoint."""
     app()

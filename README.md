@@ -98,17 +98,38 @@ aame inspect
 # 3. Auditar una sesión específica por ID o ruta
 aame inspect <session_id>
 
-# 4. Generar un Context Handoff (Save Game) a HANDOFF.md para abrir un chat limpio
+# 4. Iniciar el Cockpit Interactivo TUI (Textual)
+aame cockpit
+
+# 5. Abrir el Cockpit en una sesión específica
+aame cockpit <session_id>
+
+# 6. Generar un Context Handoff (Save Game) a HANDOFF.md para abrir un chat limpio
 aame squash
 
-# 5. Imprimir el checkpoint directamente por pantalla
+# 7. Imprimir el checkpoint directamente por pantalla
 aame squash --print
 ```
 
 ---
 
-## 4. Próximos Pasos (Roadmap Fase 3)
+## 4. Cockpit Interactivo de Terminal (`aame cockpit`)
 
-- [ ] Cockpit TUI interactivo en terminal con **Textual** (`aame cockpit`).
-- [ ] Gráficos interactivos de barras con el peso por turno y selector de podado manual.
-- [ ] Atajos de teclado para squash interactivo.
+Inspirado en herramientas modernas como Claude Code y Lazygit, el Cockpit TUI implementa las directrices de `modern-tui-craft`:
+
+* **Sidebar Lateral**: Explorador en tiempo real de sesiones descubiertas en el sistema.
+* **Banner de Métricas & KV-Cache**: Barras de progreso fluidas usando caracteres Unicode fraccionarios (`█`, `▆`, `▅`, `▄`, `▎`, `▏`), cálculo del ratio de ruido y estimación de prefijo estable.
+* **Tabla de Turnos Interactiva**:
+  * Visualización por categorías con código de colores semánticos (Arquitectura, Herramientas, Errores, Side-Quests).
+  * `[Espacio]`: Alterna individualmente si un paso se conserva (`✔`) o se poda (`✖`).
+  * `[P]`: Aplica automáticamente las heurísticas para podar todo el ruido y salidas de herramientas masivas.
+  * `[S]`: Genera el archivo `HANDOFF.md` instantáneamente con feedback visual no invasivo (`notify`).
+* **Panel de Inspección**: Muestra el contenido crudo, argumentos de herramientas o códigos de salida del paso seleccionado.
+
+---
+
+## 5. Próximos Pasos (Roadmap Fase 4)
+
+- [ ] Adaptador para **Claude Code** (`~/.claude/`).
+- [ ] Gestor de reglas y hechos persistentes a nivel repositorio (`.agents/memory/project.json`).
+- [ ] Pruebas en Windows y Linux.
